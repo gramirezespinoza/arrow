@@ -1052,6 +1052,33 @@ const std::vector<std::shared_ptr<Field>>& Schema::fields() const {
   return impl_->fields_;
 }
 
+bool Schema::Contains(const Schema& other) const {
+  if (this == &other) {
+    return true;
+  }
+
+  if (other.num_fields() > num_fields()) {
+    return false;
+  }
+
+  // looping over `other` fields, which is a presumed a subset of `this`
+  for (auto name : other.field_names()) {
+    int field_index = GetFieldIndex(name);
+    if (field_index == -1) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+bool Schema::Contains(const std::shared_ptr<Schema>& other) const {
+  if (other == nullptr) {
+    return false;
+  }
+  return Contains(*other);
+}
+
 bool Schema::Equals(const Schema& other, bool check_metadata) const {
   if (this == &other) {
     return true;

@@ -1652,6 +1652,10 @@ class ARROW_EXPORT Schema : public detail::Fingerprintable,
   bool Equals(const Schema& other, bool check_metadata = false) const;
   bool Equals(const std::shared_ptr<Schema>& other, bool check_metadata = false) const;
 
+  /// Returns true if `other` is a subset of the schema
+  bool Contains(const Schema& other) const;
+  bool Contains(const std::shared_ptr<Schema>& other) const;
+
   /// \brief Return the number of fields (columns) in the schema
   int num_fields() const;
 
