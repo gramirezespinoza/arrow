@@ -494,9 +494,11 @@ Result<std::shared_ptr<Table>> Table::FromRecordBatches(
 
   int64_t num_rows = 0;
   for (int i = 0; i < nbatches; ++i) {
-    if (!batches[i]->schema()->Equals(*schema, false)) {
-      return Status::Invalid("Schema at index ", static_cast<int>(i),
-                             " was different: \n", schema->ToString(), "\nvs\n",
+    if (!batches[i]->schema()->Contains(*schema)) {
+      return Status::Invalid("Schema is not a subset.\n",
+                             "Requested: \n",
+                             schema->ToString(), "\nvs\n",
+                             "Available: \n",
                              batches[i]->schema()->ToString());
     }
     num_rows += batches[i]->num_rows();
